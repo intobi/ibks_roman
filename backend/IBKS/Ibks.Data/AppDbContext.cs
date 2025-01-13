@@ -11,7 +11,11 @@ namespace Ibks.Data
         }
 
         public DbSet<TicketEntity> Tickets { get; set; }
-        public DbSet<TicketReplyEntity> Replies { get; set; }
+        public DbSet<TicketReplyEntity> TicketReplies { get; set; }
+        public DbSet<StatusEntity> Statuses { get; set; }
+        public DbSet<LogTypeEntity> LogTypes { get; set; }
+        public DbSet<PriorityEntity> Priorities { get; set; }
+        public DbSet<TicketTypeEntity> TicketTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -19,25 +23,62 @@ namespace Ibks.Data
 
             OnModelTicketCreating(builder);
             OnModelTicketReplyCreating(builder);
+            OnModelTypesCreating(builder);
         }
 
         private void OnModelTicketCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TicketEntity>()
-                .Property(p => p.Id)
-                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<TicketEntity>(entity =>
+            {
+                entity.ToTable("Ticket", "Support");
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<TicketEntity>()
-            .HasMany(p => p.Replies)
-                  .WithOne(cp => cp.Ticket)
-                  .HasForeignKey(cp => cp.Tid)
-                  .OnDelete(DeleteBehavior.Cascade); ;
+                // Зв'язок із пріоритетом
+                entity.HasOne(p => p.Priority)
+                      .WithMany()
+                      .HasForeignKey(p => p.PriorityId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.Status)
+                      .WithMany()
+                      .HasForeignKey(p => p.StatusId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.TicketType)
+                      .WithMany()
+                      .HasForeignKey(p => p.TicketTypeId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.LogType)
+                      .WithMany()
+                      .HasForeignKey(p => p.TicketTypeId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Зв'язок із відповідями
+                entity.HasMany(p => p.Replies)
+                      .WithOne(cp => cp.Ticket)
+                      .HasForeignKey(cp => cp.Tid)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
+
         private void OnModelTicketReplyCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TicketReplyEntity>()
-                .Property(p => p.ReplyId)
-                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<TicketReplyEntity>(entity =>
+            {
+                entity.ToTable("TicketReply", "Support");
+                entity.HasKey(p => p.ReplyId); 
+                entity.Property(p => p.ReplyId).ValueGeneratedOnAdd();
+            });
+        }
+
+        private void OnModelTypesCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PriorityEntity>().ToTable("Priority", "Support");
+            modelBuilder.Entity<StatusEntity>().ToTable("Status", "Support");
+            modelBuilder.Entity<LogTypeEntity>().ToTable("LogType", "Support");
+            modelBuilder.Entity<TicketTypeEntity>().ToTable("TicketType", "Support");
         }
     }
 }

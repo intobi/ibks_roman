@@ -12,7 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ibks.Common\Ibks.Common.csproj" />
     <ProjectReference Include="..\Ibks.Data\Ibks.Data.csproj" />
+    <ProjectReference Include="..\Ibks.Interfaces\Ibks.Interfaces.csproj" />
+    <ProjectReference Include="..\Ibks.Service\Ibks.Service.csproj" />
   </ItemGroup>
 
 </Project>

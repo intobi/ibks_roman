@@ -8,7 +8,7 @@ namespace Ibks.Data.Configurations
     //{
     //    public void Configure(EntityTypeBuilder<TicketEntity> entity)
     //    {
-    //        entity.ToTable("Ticket").HasKey(e => e.Id);
+    //        entity.ToTable("Tickets").HasKey(e => e.Id);
     //        entity.Property(e => e.Id).HasColumnName("Id").HasColumnType("bigint").IsRequired();
     //        entity.Property(e => e.Title).HasColumnName("Title").HasColumnType("nvarchar(250)").IsRequired();
     //        entity.Property(e => e.ApplicationId).HasColumnName("ApplicationId").HasColumnType("int").IsRequired();
