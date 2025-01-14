@@ -5,39 +5,15 @@ import SelectField from '../FormFields/SelectField';
 import { getTicketMetadata } from '../../api/ticketsApi';
 import { modules } from '../../constants/modules';
 
-const TicketForm = ({ ticket, onSubmit }) => {
+const TicketForm = ({ ticket, metadata, onChange }) => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        priorityId: '',
         module: '',
-        urgentLevel: '',
+        lvl: '',
         type: '',
         state: '',
     });
-
-    const [metadata, setMetadata] = useState({
-        urgentLevels: [],
-        types: [],
-        states: [],
-    });
-
-    const [loadingMetadata, setLoadingMetadata] = useState(true);
-
-    useEffect(() => {
-        const fetchMetadata = async () => {
-            try {
-                const data = await getTicketMetadata();
-                setMetadata(data);
-            } catch (error) {
-                console.error('Error fetching metadata:', error);
-            } finally {
-                setLoadingMetadata(false); // Метадані завантажені
-            }
-        };
-
-        fetchMetadata();
-    }, []);
 
     useEffect(() => {
         if (ticket) setFormData(ticket);
@@ -45,23 +21,24 @@ const TicketForm = ({ ticket, onSubmit }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedFields = { [name]: value };
+        setFormData((prev) => ({ ...prev, ...updatedFields }));
+        onChange(updatedFields);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(formData);
+    const isFieldValid = (value) => {
+        return value && value.trim() !== '';
     };
-
-    if (loadingMetadata) return <p>Loading metadata...</p>; // Покажіть лоадер поки метадані не завантажаться
+    
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form>
             <TextInputField
                 label="Title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
+                class={!isFieldValid(formData.title) ? 'is-invalid' : ''}
             />
             <SelectField
                 label="Module"
@@ -72,16 +49,18 @@ const TicketForm = ({ ticket, onSubmit }) => {
                     value: module.id,
                     label: module.title,
                 }))}
+                className={!isFieldValid(formData.module) ? 'is-invalid' : ''}
             />
             <SelectField
                 label="Urgent Level"
-                name="urgentLevel"
-                value={formData.urgentLevel}
+                name="lvl"
+                value={formData.lvl}
                 onChange={handleChange}
                 options={metadata.urgentLevels.map((level) => ({
                     value: level.id,
                     label: level.title,
                 }))}
+                className={!isFieldValid(formData.lvl) ? 'is-invalid' : ''}
             />
             <SelectField
                 label="Type"
@@ -92,6 +71,7 @@ const TicketForm = ({ ticket, onSubmit }) => {
                     value: type.id,
                     label: type.title,
                 }))}
+                className={!isFieldValid(formData.type) ? 'is-invalid' : ''}
             />
             <SelectField
                 label="State"
@@ -102,16 +82,15 @@ const TicketForm = ({ ticket, onSubmit }) => {
                     value: state.id,
                     label: state.title,
                 }))}
+                className={!isFieldValid(formData.state) ? 'is-invalid' : ''}
             />
             <TextAreaField
                 label="Description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
+                className={!isFieldValid(formData.description) ? 'is-invalid' : ''}
             />
-            <button type="submit" className="btn btn-success mt-3">
-                {ticket ? 'Update Ticket' : 'Create Ticket'}
-            </button>
         </form>
     );
 };

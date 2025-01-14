@@ -1,17 +1,21 @@
 import React from 'react';
+import './TextAreaField.css'; 
 
-const TextAreaField = ({ label, name, value, onChange }) => (
-    <div className="mb-3">
-        <label htmlFor={name} className="form-label">{label}</label>
-        <textarea
-            id={name}
-            name={name}
-            rows="3"
-            className="form-control"
-            value={value}
-            onChange={onChange}
-        />
-    </div>
-);
+const TextAreaField = ({ label, name, value, onChange }) => {
+    return (
+        <div className="textarea-field-container">
+            <label htmlFor={name} className="textarea-field-label">
+                {label}
+            </label>
+            <textarea
+                id={name}
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="textarea-field-input"
+            />
+        </div>
+    );
+};
 
 export default TextAreaField;

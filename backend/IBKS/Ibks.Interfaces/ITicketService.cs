@@ -7,10 +7,8 @@ namespace Ibks.Interfaces
     {
         Task<PaginatedResult<TicketListItemModel>> GetAllAsync(PaginationQuery query);
         Task<TicketModel> GetByIdAsync(long id);
-        Task<TicketModel> CreateAsync(TicketModel ticket);
+        Task<TicketModel> CreateAsync(CreateTicketModel ticket);
         Task<TicketModel> UpdateAsync(TicketModel ticket);
-        Task<bool> DeleteAsync(long id);
-
         Task<TicketMetadataModel> GetMetadataAsync();
     }
 }

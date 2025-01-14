@@ -13,9 +13,9 @@ namespace Ibks.Data
         public DbSet<TicketEntity> Tickets { get; set; }
         public DbSet<TicketReplyEntity> TicketReplies { get; set; }
         public DbSet<StatusEntity> Statuses { get; set; }
-        public DbSet<LogTypeEntity> LogTypes { get; set; }
         public DbSet<PriorityEntity> Priorities { get; set; }
         public DbSet<TicketTypeEntity> TicketTypes { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,6 +24,7 @@ namespace Ibks.Data
             OnModelTicketCreating(builder);
             OnModelTicketReplyCreating(builder);
             OnModelTypesCreating(builder);
+            OnModelUserCreating(builder);
         }
 
         private void OnModelTicketCreating(ModelBuilder modelBuilder)
@@ -34,7 +35,6 @@ namespace Ibks.Data
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.Id).ValueGeneratedOnAdd();
 
-                // Зв'язок із пріоритетом
                 entity.HasOne(p => p.Priority)
                       .WithMany()
                       .HasForeignKey(p => p.PriorityId)
@@ -50,16 +50,15 @@ namespace Ibks.Data
                       .HasForeignKey(p => p.TicketTypeId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(p => p.LogType)
-                      .WithMany()
-                      .HasForeignKey(p => p.TicketTypeId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                // Зв'язок із відповідями
                 entity.HasMany(p => p.Replies)
                       .WithOne(cp => cp.Ticket)
                       .HasForeignKey(cp => cp.Tid)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne<UserEntity>()
+                      .WithMany()
+                      .HasForeignKey(p => p.UserOID)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
         }
 
@@ -79,6 +78,15 @@ namespace Ibks.Data
             modelBuilder.Entity<StatusEntity>().ToTable("Status", "Support");
             modelBuilder.Entity<LogTypeEntity>().ToTable("LogType", "Support");
             modelBuilder.Entity<TicketTypeEntity>().ToTable("TicketType", "Support");
+        }
+
+        private void OnModelUserCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserEntity>(entity =>
+            {
+                entity.ToTable("User", "Support");
+                entity.HasKey(p => p.OID); 
+            });
         }
     }
 }

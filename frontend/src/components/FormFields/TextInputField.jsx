@@ -1,17 +1,22 @@
 import React from 'react';
+import './TextInputField.css'; 
 
-const TextInputField = ({ label, name, value, onChange }) => (
-    <div className="mb-3">
-        <label htmlFor={name} className="form-label">{label}</label>
-        <input
-            type="text"
-            id={name}
-            name={name}
-            className="form-control"
-            value={value}
-            onChange={onChange}
-        />
-    </div>
-);
+const TextInputField = ({ label, name, value, onChange }) => {
+    return (
+        <div className="input-field-container">
+            <label htmlFor={name} className="input-field-label">
+                {label}
+            </label>
+            <input
+                type="text"
+                id={name}
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="input-field-input"
+            />
+        </div>
+    );
+};
 
 export default TextInputField;

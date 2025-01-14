@@ -25,7 +25,6 @@
         public List<TicketReplyEntity> Replies { get; set; }
         public PriorityEntity Priority { get; set; }
         public StatusEntity Status { get; set; }
-        public LogTypeEntity LogType { get; set; }
         public TicketTypeEntity TicketType { get; set; }
     }
 }

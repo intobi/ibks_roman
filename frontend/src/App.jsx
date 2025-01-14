@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TicketsPage from './pages/tickets/TicketsPage'; 
-import TicketEditPage from './pages/ticketEdit/TicketEditPage';
+import TicketEditPage from './pages/ticketEdit/TicketEditPage.tsx';
 import './App.css';
 
 const App = () => {

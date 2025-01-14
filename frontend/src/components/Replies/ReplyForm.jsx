@@ -39,7 +39,7 @@ const ReplyForm = ({ ticketId, reply, onSave, onCancelEdit  }) => {
     const handleClear = () => {
         setText('');
         if (reply && onCancelEdit) {
-            onCancelEdit(); 
+            onCancelEdit();  
         }
     };
 
@@ -49,6 +49,7 @@ const ReplyForm = ({ ticketId, reply, onSave, onCancelEdit  }) => {
                 <textarea
                     className="form-control mb-2"
                     rows="3"
+                    style={{ backgroundColor: '#fff9c4' }}
                     placeholder={reply ? 'Update your reply...' : 'Add a new reply...'}
                     value={text}
                     onChange={(e) => setText(e.target.value)}

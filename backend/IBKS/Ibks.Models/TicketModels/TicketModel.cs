@@ -1,4 +1,5 @@
 ﻿using Ibks.Models.TicketReplyModels;
+using Newtonsoft.Json;
 
 namespace Ibks.Models.TicketModels
 {

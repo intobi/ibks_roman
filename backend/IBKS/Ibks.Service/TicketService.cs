@@ -27,7 +27,6 @@ namespace Ibks.Service
 
             var tickets = await _context.Tickets
                 .Include(t => t.Priority)
-                .Include(t => t.LogType)
                 .Include(t => t.Status)
                 .Include(t => t.TicketType)
                 .Skip(skip)
@@ -48,10 +47,6 @@ namespace Ibks.Service
         public async Task<TicketModel> GetByIdAsync(long id)
         {
             var ticket = await _context.Tickets
-                .Include(t => t.Priority)
-                .Include(t => t.Status)
-                .Include(t => t.LogType)
-                .Include(t => t.TicketType)
                 .Include(t => t.Replies) 
                 .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -60,35 +55,49 @@ namespace Ibks.Service
             return _mapper.Map<TicketModel>(ticket);
         }
 
-        public async Task<TicketModel> CreateAsync(TicketModel ticketModel)
+        public async Task<TicketModel> CreateAsync(CreateTicketModel ticketModel)
         {
-            var ticketEntity = _mapper.Map<TicketEntity>(ticketModel);
-            var createdEntity = await _context.Tickets.AddAsync(ticketEntity);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<TicketModel>(createdEntity.Entity);
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    throw new Exception("No users found in the database to associate with the ticket.");
+                }
+
+                var ticketEntity = _mapper.Map<TicketEntity>(ticketModel);
+
+                ticketEntity.UserOID = user.OID;
+
+                var createdEntity = await _context.Tickets.AddAsync(ticketEntity);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<TicketModel>(createdEntity.Entity);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<TicketModel> UpdateAsync(TicketModel ticketModel)
         {
-            var existingTicket = await _context.Tickets.FindAsync(ticketModel.Id);
-            if (existingTicket == null) return null;
+            try
+            {
+                var existingTicket = await _context.Tickets.FindAsync(ticketModel.Id);
+                if (existingTicket == null) return null;
 
-            _mapper.Map(ticketModel, existingTicket);
+                _mapper.Map(ticketModel, existingTicket);
 
-            _context.Tickets.Update(existingTicket);
-            await _context.SaveChangesAsync();
+                _context.Tickets.Update(existingTicket);
+                await _context.SaveChangesAsync();
 
-            return _mapper.Map<TicketModel>(existingTicket);
-        }
-
-        public async Task<bool> DeleteAsync(long id)
-        {
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null) return false;
-
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
-            return true;
+                return _mapper.Map<TicketModel>(existingTicket);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<TicketMetadataModel> GetMetadataAsync()

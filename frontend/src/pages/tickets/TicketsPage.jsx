@@ -3,7 +3,7 @@ import TicketsTable from '../../components/Tickets/TicketsTable';
 import Pagination from '../../components/Pagination/Pagination';
 import AddTicketButton from '../../components/Buttons/AddTicketButton';
 import { getTickets } from '../../api/ticketsApi';
-import PaginationQuery from '../../api/models/PaginationQuery';
+import PaginationQuery from '../../api/models/PaginationQuery.ts';
 
 const TicketsPage = () => {
 

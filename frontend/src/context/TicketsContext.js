@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { getTickets, getTicketById, createTicket, updateTicket, addReply } from '../api/ticketsApi';
+import { getTickets, getTicketById, createTicket as createTicketApi, updateTicket as updateTicketApi, addReply } from '../api/ticketsApi';
 
 const TicketsContext = createContext();
 
@@ -32,15 +32,21 @@ const TicketsProvider = ({ children }) => {
         }
     };
 
-    const saveTicket = async (ticket) => {
+    const createTicket = async (ticket) => {
         try {
-            if (ticket.id) {
-                await updateTicket(ticket);
-            } else {
-                await createTicket(ticket);
-            }
+            const createdTicket = await createTicketApi(ticket);
+            return createdTicket; 
         } catch (error) {
-            console.error('Error saving ticket:', error);
+            console.error('Error creating ticket:', error);
+            throw error;
+        }
+    };
+
+    const updateTicket = async (ticket) => {
+        try {
+            await updateTicketApi(ticket);
+        } catch (error) {
+            console.error('Error updating ticket:', error);
             throw error;
         }
     };
@@ -61,7 +67,8 @@ const TicketsProvider = ({ children }) => {
                 loading,
                 fetchTickets,
                 fetchTicketById,
-                saveTicket,
+                createTicket, 
+                updateTicket, 
                 postReply,
             }}
         >

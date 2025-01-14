@@ -40,7 +40,7 @@ namespace IBKS.Controllers
         [ProducesResponseType(typeof(ResultMessage), 200)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> Create(TicketModel ticket)
+        public async Task<IActionResult> Create(CreateTicketModel ticket)
         {
             var result = await _ticketService.CreateAsync(ticket);
             return Ok(result);
