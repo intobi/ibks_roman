@@ -57,7 +57,6 @@ namespace Ibks.Service
 
             if (ticket == null) return null;
 
-            // Мапінг на модель
             return _mapper.Map<TicketModel>(ticket);
         }
 
@@ -90,6 +89,28 @@ namespace Ibks.Service
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return true;
-        }    
+        }
+
+        public async Task<TicketMetadataModel> GetMetadataAsync()
+        {
+            var urgentLevels = await _context.Priorities
+                .Select(u => new MetadataItem { Id = u.Id, Title = u.Title })
+                .ToListAsync();
+
+            var types = await _context.TicketTypes
+                .Select(t => new MetadataItem { Id = t.Id, Title = t.Title })
+                .ToListAsync();
+
+            var states = await _context.Statuses
+                .Select(s => new MetadataItem { Id = s.Id, Title = s.Title })
+                .ToListAsync();
+
+            return new TicketMetadataModel
+            {
+                UrgentLevels = urgentLevels,
+                Types = types,
+                States = states
+            };
+        }
     }
 }

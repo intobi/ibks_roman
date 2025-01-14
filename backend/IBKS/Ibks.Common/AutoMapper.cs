@@ -25,6 +25,15 @@ namespace Ibks.Common
                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.Status.Title));
 
             CreateMap<TicketReplyEntity, TicketReplyModel>().ReverseMap();
+
+            CreateMap<TicketReplyEntity, ReplyModel>()
+                .ForMember(dest => dest.TicketId, opt => opt.MapFrom(src => src.Tid));
+
+            CreateMap<TicketReplyEntity, ReplyModel>().ReverseMap();
+            CreateMap<CreateReplyModel, TicketReplyEntity>()
+                .ForMember(dest => dest.Tid, opt => opt.MapFrom(src => src.TicketId))
+                .ForMember(dest => dest.Reply, opt => opt.MapFrom(src => src.Reply))
+                .ForMember(dest => dest.ReplyDate, opt => opt.MapFrom(src => DateTime.UtcNow));
         }
     }
 }

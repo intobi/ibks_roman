@@ -5,12 +5,14 @@ const AddTicketButton = () => {
     const navigate = useNavigate();
 
     return (
-        <button
-            className="btn btn-success mb-3"
-            onClick={() => navigate('/tickets/new')}
-        >
-            Add New Ticket
-        </button>
+        <div className="d-flex justify-content-end mb-3">
+            <button
+                className="btn btn-success"
+                onClick={() => navigate('/tickets/new')}
+            >
+                Add New Ticket
+            </button>
+        </div>
     );
 };
 

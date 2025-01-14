@@ -2,7 +2,7 @@
 {
     public class TicketReplyModel
     {
-        public long ReplyId { get; set; }
+        public int ReplyId { get; set; }
         public string Reply { get; set; }
         public DateTime ReplyDate { get; set; }
     }

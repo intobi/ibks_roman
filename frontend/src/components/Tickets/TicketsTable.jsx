@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const TicketsTable = ({ tickets }) => {
+    const navigate = useNavigate();
+
     return (
         <table className="table table-bordered table-striped">
             <thead className="thead-dark">
@@ -28,13 +31,18 @@ const TicketsTable = ({ tickets }) => {
                                     }}
                                 ></div>
                             </td>
-                            <td>{ticket.id}</td>
+                            <td>{ticket.number}</td>
                             <td>{ticket.title}</td>
                             <td>{ticket.module}</td>
                             <td>{ticket.type}</td>
                             <td>{ticket.state}</td>
                             <td>
-                                <button className="btn btn-primary btn-sm">Edit</button>
+                                <button
+                                    className="btn btn-primary btn-sm"
+                                    onClick={() => navigate(`/tickets/edit/${ticket.number}`)}
+                                >
+                                    Edit
+                                </button>
                             </td>
                         </tr>
                     ))
@@ -50,7 +58,6 @@ const TicketsTable = ({ tickets }) => {
     );
 };
 
-// Функція для отримання кольору пріоритету
 const getPriorityColor = (priority) => {
     switch (priority) {
         case 'High':

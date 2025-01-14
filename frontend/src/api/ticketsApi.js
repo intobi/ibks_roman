@@ -57,14 +57,20 @@ export const updateTicket = async (ticket) => {
 };
 
 
-export const deleteTicket = async (id) => {
+export const getTicketMetadata = async () => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/Delete`, {
-            params: { id },
-        });
+        const response = await axios.get(`${API_BASE_URL}/GetMetadata`);
         return response.data;
     } catch (error) {
-        console.error('Error deleting ticket:', error);
+        console.error('Error fetching ticket metadata:', error);
         throw error;
     }
+};
+
+export const addReply = async (ticketId, reply) => {
+    const response = await axios.post(`/api/Ticket/AddReply`, {
+        ticketId,
+        text: reply,
+    });
+    return response.data;
 };

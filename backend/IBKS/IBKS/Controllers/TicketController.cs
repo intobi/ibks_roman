@@ -1,10 +1,7 @@
 ﻿using Ibks.Interfaces;
 using Ibks.Models.Base;
 using Ibks.Models.TicketModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Sockets;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IBKS.Controllers
 {
@@ -18,7 +15,6 @@ namespace IBKS.Controllers
         {
             _ticketService = ticketService;
         }
-
 
         [HttpPost("GetAll")]
         [ProducesResponseType(typeof(PaginatedResult<TicketListItemModel>), 200)]
@@ -60,13 +56,13 @@ namespace IBKS.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("Delete")]
-        [ProducesResponseType(typeof(ResultMessage), 200)]
+        [HttpGet("GetMetadata")]
+        [ProducesResponseType(typeof(TicketMetadataModel), 200)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> GetMetadata()
         {
-            var result = await _ticketService.DeleteAsync(id);
+            var result = await _ticketService.GetMetadataAsync();
             return Ok(result);
         }
     }

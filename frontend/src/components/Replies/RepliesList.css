@@ -1,0 +1,14 @@
+.replies-container {
+    max-height: 400px; 
+    overflow-y: auto; 
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    background-color: #f9f9f9; 
+    border-radius: 5px;
+}
+
+.replies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
