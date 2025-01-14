@@ -4,9 +4,9 @@
     {
         public string Title { get; set; }
         public string Module { get; set; }
-        public string Lvl { get; set; }
-        public string Type { get; set; }
-        public string State { get; set; }
+        public int Lvl { get; set; }
+        public int Type { get; set; }
+        public int State { get; set; }
         public string Description { get; set; }
     }
 }

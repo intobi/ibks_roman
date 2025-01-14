@@ -1,5 +1,3 @@
-using Ibks.Models.Base;
-using Ibks.Models.TicketModels;
 using Ibks.Models.TicketReplyModels;
 
 namespace Ibks.Interfaces

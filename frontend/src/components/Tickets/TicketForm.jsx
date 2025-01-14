@@ -15,10 +15,6 @@ const TicketForm = ({ ticket, metadata, onChange }) => {
         state: '',
     });
 
-    useEffect(() => {
-        if (ticket) setFormData(ticket);
-    }, [ticket]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         const updatedFields = { [name]: value };
@@ -26,10 +22,17 @@ const TicketForm = ({ ticket, metadata, onChange }) => {
         onChange(updatedFields);
     };
 
+
     const isFieldValid = (value) => {
-        return value && value.trim() !== '';
+        if (typeof value === "string") {
+            return value.trim() !== "";
+        }
+        return value !== null && value !== undefined;
     };
-    
+
+    useEffect(() => {
+        if (ticket) setFormData(ticket);
+    }, [ticket]);
 
     return (
         <form>

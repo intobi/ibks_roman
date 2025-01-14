@@ -47,7 +47,7 @@ namespace Ibks.Service
         public async Task<TicketModel> GetByIdAsync(long id)
         {
             var ticket = await _context.Tickets
-                .Include(t => t.Replies) 
+                .Include(t => t.Replies)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (ticket == null) return null;
@@ -57,47 +57,33 @@ namespace Ibks.Service
 
         public async Task<TicketModel> CreateAsync(CreateTicketModel ticketModel)
         {
-            try
+            var user = await _context.Users.FirstOrDefaultAsync();
+            if (user == null)
             {
-                var user = await _context.Users.FirstOrDefaultAsync();
-                if (user == null)
-                {
-                    throw new Exception("No users found in the database to associate with the ticket.");
-                }
-
-                var ticketEntity = _mapper.Map<TicketEntity>(ticketModel);
-
-                ticketEntity.UserOID = user.OID;
-
-                var createdEntity = await _context.Tickets.AddAsync(ticketEntity);
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map<TicketModel>(createdEntity.Entity);
+                throw new Exception("No users found in the database to associate with the ticket.");
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+
+            var ticketEntity = _mapper.Map<TicketEntity>(ticketModel);
+
+            ticketEntity.UserOID = user.OID;
+
+            var createdEntity = await _context.Tickets.AddAsync(ticketEntity);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<TicketModel>(createdEntity.Entity);
         }
 
         public async Task<TicketModel> UpdateAsync(TicketModel ticketModel)
         {
-            try
-            {
-                var existingTicket = await _context.Tickets.FindAsync(ticketModel.Id);
-                if (existingTicket == null) return null;
+            var existingTicket = await _context.Tickets.FindAsync(ticketModel.Id);
+            if (existingTicket == null) return null;
 
-                _mapper.Map(ticketModel, existingTicket);
+            _mapper.Map(ticketModel, existingTicket);
 
-                _context.Tickets.Update(existingTicket);
-                await _context.SaveChangesAsync();
+            _context.Tickets.Update(existingTicket);
+            await _context.SaveChangesAsync();
 
-                return _mapper.Map<TicketModel>(existingTicket);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return _mapper.Map<TicketModel>(existingTicket);
         }
 
         public async Task<TicketMetadataModel> GetMetadataAsync()
